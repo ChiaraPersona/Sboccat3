@@ -2,5 +2,10 @@
 	"[svelte]": {
 		"editor.defaultFormatter": "svelte.svelte-vscode"
 	},
-	"explorer.sortOrder": "filesFirst"
+	"explorer.sortOrder": "filesFirst",
+	"editor.quickSuggestions": {
+		"other": "on",
+		"comments": "off",
+		"strings": "on"
+	}
 }
