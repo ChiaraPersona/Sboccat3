@@ -7,5 +7,3 @@
 <Navbar />
 
 <slot />
-
-sotto
