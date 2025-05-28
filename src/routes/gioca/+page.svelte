@@ -16,7 +16,7 @@
 			e.preventDefault();
 			increase();
 		}}
-		class="bg-sb-rosso text-sb-bianco w-full rounded-full p-4 text-xl font-bold uppercase hover:bg-red-700"
+		class="bg-sb-rosso text-sb-bianco w-full touch-manipulation rounded-full p-4 text-xl font-bold uppercase hover:bg-red-700"
 	>
 		di più
 	</button>
