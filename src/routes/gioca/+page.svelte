@@ -12,7 +12,10 @@
 
 <div class="bg-sb-bianco fixed bottom-0 w-full p-8">
 	<button
-		onclick={increase}
+		onclick={(e) => {
+			e.preventDefault();
+			increase();
+		}}
 		class="bg-sb-rosso text-sb-bianco w-full rounded-full p-4 text-xl font-bold uppercase hover:bg-red-700"
 	>
 		di più
