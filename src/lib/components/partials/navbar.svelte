@@ -2,7 +2,7 @@
 	import NavbarLink from './navbar-link.svelte';
 </script>
 
-<nav class="bg-sb-viola text-sb-bianco flex justify-between">
+<nav class="bg-sb-viola text-sb-bianco flex justify-between px-1 py-1">
 	<NavbarLink url="/" testo="Home" />
 	<div class="flex gap-1">
 		<NavbarLink url="/eventi" testo="Eventi" />

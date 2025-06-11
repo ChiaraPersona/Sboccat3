@@ -19,7 +19,7 @@
 		'block rounded-md p-2',
 		{
 			'bg-sb-viola text-sb-bianco hover:bg-sb-arancione hover:text-sb-bianco': !isActive,
-			'bg-sb-giallo': isActive
+			'bg-sb-giallo text-black': isActive
 		}
 	]}
 >

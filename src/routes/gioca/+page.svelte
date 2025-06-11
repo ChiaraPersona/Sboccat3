@@ -22,7 +22,7 @@
 			e.preventDefault();
 			increase();
 		}}
-		class="bg-sb-viola text-sb-bianco w-full touch-manipulation rounded-full p-4 text-xl font-bold uppercase hover:bg-purple-600"
+		class="bg-sb-viola text-sb-bianco hover:bg-purple-600np w-full touch-manipulation rounded-full p-4 text-xl font-bold uppercase"
 	>
 		di più
 	</button>
