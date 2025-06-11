@@ -1,41 +1,12 @@
-<script>
-	import Card from '$lib/Card.svelte';
-
-	const eventi = [
-		{
-			title: 'Chiara Amodio',
-			description: 'Un’esposizione collettiva di opere contemporanee.',
-			image: 'https://via.placeholder.com/400x250'
-		},
-		{
-			title: 'Carlotta Petrini',
-			description: 'Musica elettronica e visual live performance.',
-			image: 'https://via.placeholder.com/400x250'
-		},
-		{
-			title: 'Christina Bassi',
-			description: 'Laboratorio gratuito per tutti i partecipanti.',
-			image: 'https://via.placeholder.com/400x250'
-		},
-		{
-			title: 'Christina Bassi',
-			description: 'Laboratorio gratuito per tutti i partecipanti.',
-			image: 'https://via.placeholder.com/400x250'
-		}
-	];
+<script lang="ts">
+	import CardPersona from './card-persona.svelte';
+	import { persone } from './persone';
 </script>
 
-<div class="cards-container">
-	{#each eventi as evento}
-		<Card title={evento.title} description={evento.description} image={evento.image} />
+<p>Chi siamo?</p>
+
+<div class="grid grid-cols-3 gap-4 p-4">
+	{#each persone as persona}
+		<CardPersona {...persona} />
 	{/each}
 </div>
-
-<style>
-	.cards-container {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-		gap: 20px;
-		padding: 20px;
-	}
-</style>
