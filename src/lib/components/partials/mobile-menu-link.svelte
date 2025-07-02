@@ -20,8 +20,8 @@
 		'text-center',
 
 		{
-			'bg-sb-viola text-sb-bianco hover:bg-sb-arancione hover:text-sb-bianco': !isActive,
-			'bg-sb-giallo text-black': isActive
+			'bg-sb-bianco/15 text-sb-bianco hover:bg-sb-bianco/40 ': !isActive,
+			'text-sb-viola bg-sb-bianco': isActive
 		}
 	]}
 >
