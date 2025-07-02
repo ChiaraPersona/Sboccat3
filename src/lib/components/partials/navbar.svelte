@@ -3,6 +3,7 @@
 	import * as Sheet from '$lib/components/ui/sheet/index.js';
 	import MobileMenuLink from './mobile-menu-link.svelte';
 	import { onNavigate } from '$app/navigation';
+	import { assets } from '$app/paths';
 
 	type Link = {
 		url: string;
@@ -33,10 +34,10 @@
 
 	<Sheet.Root bind:open={isOpen}>
 		<Sheet.Trigger class="bg-sb-bianco/15 hover:bg-sb-bianco/40 block rounded-md p-2 md:hidden">
-			<img class="h-5" src="/images/hamburger-icon.png" alt="hamburger icon bianco" />
+			<img class="h-5" src="{assets}/images/hamburger-icon.png" alt="hamburger icon bianco" />
 		</Sheet.Trigger>
 
-		<Sheet.Content class="bg-sb-viola w-screen !gap-0 border-none md:hidden">
+		<Sheet.Content class="bg-sb-rosa w-screen !gap-0 border-none md:hidden">
 			<Sheet.Header>
 				<Sheet.Title class="flex items-center justify-center md:hidden">
 					<img class="h-12" src="/images/logo-sboccat3.png" alt="logo" />
