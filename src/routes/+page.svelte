@@ -11,7 +11,7 @@
 			</h1>
 		</div>
 		<img
-			class="h-60 md:h-60"
+			class="h-60 transition-all duration-200 hover:scale-103 hover:rotate-4 md:h-80"
 			src="{assets}/images/logo-sbloccate-sfondo-rosa.png"
 			alt="logo sboccate sfondo rosa"
 		/>
