@@ -5,15 +5,23 @@
 	let p: Persona = $props();
 </script>
 
-<div class="border-sb-viola flex flex-col items-center gap-3 rounded-lg border-8 p-4 text-center">
+<div
+	class={[
+		'text-sb-bianco shadow-lg',
+		'from-sb-rosa/50 to-sb-viola/80 bg-radial-[at_10%_10%]',
+		'flex flex-col items-center',
+		'gap-3 rounded-lg  p-4 text-center',
+		'transition-all duration-200 hover:scale-103 hover:rotate-2'
+	]}
+>
 	<img
-		class="border-sb-viola size-40 rounded-full border-8"
+		class="size-40 rounded-full"
 		src="{assets}/images/persone/{p.immagine}"
 		alt="Foto di {p.nome}"
 	/>
 	<div>
-		<p>{p.nome}</p>
-		<p>{p.citazione}</p>
+		<p class="text-xl font-bold">{p.nome}</p>
+		<p class="italic">“{p.citazione}“</p>
 	</div>
 	<p>{p.ruolo}</p>
 </div>
