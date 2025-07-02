@@ -18,8 +18,8 @@
 	class={[
 		'block rounded-md p-2',
 		{
-			'bg-sb-bianco/15 text-sb-bianco hover:bg-sb-bianco/40 ': !isActive,
-			'text-sb-viola bg-sb-bianco': isActive
+			'hover:bg-sb-bianco/60 text-black ': !isActive,
+			'bg-sb-bianco text-black': isActive
 		}
 	]}
 >

@@ -4,6 +4,7 @@
 	import MobileMenuLink from './mobile-menu-link.svelte';
 	import { onNavigate } from '$app/navigation';
 	import { assets } from '$app/paths';
+	import { Menu } from '@lucide/svelte/icons';
 
 	type Link = {
 		url: string;
@@ -24,7 +25,7 @@
 	});
 </script>
 
-<nav class="bg-sb-viola text-sb-bianco flex justify-between px-1 py-1">
+<nav class="z-50 flex justify-between px-1 py-1">
 	<NavbarLink url="/" testo="Home" />
 	<div class="hidden gap-1 md:flex">
 		{#each links as link}
@@ -34,7 +35,7 @@
 
 	<Sheet.Root bind:open={isOpen}>
 		<Sheet.Trigger class="bg-sb-bianco/15 hover:bg-sb-bianco/40 block rounded-md p-2 md:hidden">
-			<img class="h-5" src="{assets}/images/hamburger-icon.png" alt="hamburger icon bianco" />
+			<Menu />
 		</Sheet.Trigger>
 
 		<Sheet.Content class="bg-sb-rosa w-screen !gap-0 border-none md:hidden">

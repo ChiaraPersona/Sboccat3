@@ -21,7 +21,7 @@
 
 		{
 			'bg-sb-bianco/15 text-sb-bianco hover:bg-sb-bianco/40 ': !isActive,
-			'text-sb-viola bg-sb-bianco': isActive
+			'text-sb-rosa bg-sb-bianco': isActive
 		}
 	]}
 >
