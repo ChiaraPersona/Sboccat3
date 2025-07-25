@@ -24,11 +24,5 @@ export const persone: Array<Persona> = [
 		nome: 'Giorgia Grasso',
 		citazione: 'sono molto stanca della vita ma vi ascolto',
 		ruolo: 'Psicologa'
-	},
-	{
-		immagine: 'macri',
-		nome: 'Maria Cristina Tanzi',
-		citazione: 'come ci dobbiamo mettere?',
-		ruolo: 'Monella'
 	}
 ];
