@@ -3,6 +3,6 @@ export type Evento = {
 	sottotitolo?: string;
 	luogo: string;
 	data: Date;
-	ora: string;
 	instagram: string;
+	immagine?: string;
 };

@@ -3,8 +3,7 @@
 
 	export const dati: Evento = {
 		titolo: 'Hyperpop',
-		data: new Date('2025-06-12'),
-		ora: '19:00',
+		data: new Date(2025, 6, 12, 19, 0),
 		luogo: 'Collettivo Resine',
 		instagram: '',
 		sottotitolo: 'Ti hanno mai detto che ascolti musica di merda?'

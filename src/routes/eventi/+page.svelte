@@ -1,4 +1,4 @@
 <script lang="ts">
-	import Evento1 from './evento-1/+page.svx';
+	import Evento1 from './desiderandae/+page.svelte';
 	console.log(Evento1);
 </script>
