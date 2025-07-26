@@ -1,7 +1,6 @@
 <script lang="ts">
-	import CardEvento from '$lib/card-evento.svelte';
-	import { eventi } from '$lib/eventi';
-	import { slugify } from '$lib/utils';
+	import CardEvento from './card-evento.svelte';
+	import { eventi } from './eventi';
 </script>
 
 <div class="mx-auto max-w-screen-xl space-y-4 p-4">
@@ -9,9 +8,7 @@
 
 	<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 		{#each eventi as evento}
-			<a href={`/eventi/${slugify(evento.titolo)}`} class="block">
-				<CardEvento {...evento} />
-			</a>
+			<CardEvento {...evento} />
 		{/each}
 	</div>
 </div>
