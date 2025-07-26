@@ -5,18 +5,19 @@
 	let count = 0;
 
 	let timeLeft = 10;
-	let timerInterval = null;
 	let timerStarted = false;
+	let timerInterval;
 	let gameOver = false;
+
+	let playerName = '';
+	let leaderboard = [];
+	let nameSubmitted = false;
 
 	function increase() {
 		if (gameOver) return;
+		if (!timerStarted) startTimer();
 
-		if (!timerStarted) {
-			startTimer();
-		}
-
-		frase = frase + 'y';
+		frase += 'y';
 		count += 1;
 	}
 
@@ -24,7 +25,7 @@
 		timerStarted = true;
 		timerInterval = setInterval(() => {
 			if (timeLeft > 0) {
-				timeLeft -= 1;
+				timeLeft--;
 			} else {
 				clearInterval(timerInterval);
 				gameOver = true;
@@ -32,52 +33,84 @@
 		}, 1000);
 	}
 
-	function reset() {
-		clearInterval(timerInterval);
-		timeLeft = 10;
-		count = 0;
-		frase = 'sono gay';
-		timerStarted = false;
-		gameOver = false;
-	}
-
-	onDestroy(() => {
-		if (timerInterval) clearInterval(timerInterval);
-	});
-
 	function formatTime(seconds) {
 		const m = Math.floor(seconds / 60);
 		const s = seconds % 60;
 		return `${m}:${s.toString().padStart(2, '0')}`;
 	}
+
+	function submitScore() {
+		if (playerName.trim() === '') return;
+
+		leaderboard = [...leaderboard, { name: playerName, score: count }]
+			.sort((a, b) => b.score - a.score)
+			.slice(0, 10);
+		nameSubmitted = true;
+	}
+
+	function reset() {
+		frase = 'sono gay';
+		count = 0;
+		timeLeft = 10;
+		timerStarted = false;
+		gameOver = false;
+		playerName = '';
+		nameSubmitted = false;
+		clearInterval(timerInterval);
+	}
+
+	onDestroy(() => {
+		if (timerInterval) clearInterval(timerInterval);
+	});
 </script>
 
+<!-- CONTENUTO CENTRALE -->
 <div
-	class="flex h-[calc(100vh-124px-40px)] items-center justify-center p-8 transition-colors duration-500"
+	class="flex h-[calc(100vh-180px)] flex-col items-center justify-center overflow-y-auto p-6 text-center"
 >
-	<p class="w-full text-center text-4xl font-bold break-all uppercase">{frase}</p>
+	{#if !gameOver}
+		<p class="text-4xl font-bold break-all uppercase">{frase}</p>
+	{:else if !nameSubmitted}
+		<div class="flex flex-col items-center">
+			<h2 class="mb-2 text-lg font-bold">Il tempo è finito!</h2>
+			<p class="mb-2">Hai fatto <strong>{count}</strong> click.</p>
+			<input
+				bind:value={playerName}
+				placeholder="Il tuo nome"
+				class="mb-2 w-64 rounded border border-gray-300 px-3 py-2"
+				maxlength="20"
+			/>
+			<button on:click={submitScore} class="btn-submit">Invia</button>
+		</div>
+	{:else}
+		<div class="flex flex-col items-center">
+			<h2 class="mb-4 text-2xl font-bold">🏆 Classifica</h2>
+			<ol class="list-decimal space-y-1 pl-5 text-left">
+				{#each leaderboard as entry, i}
+					<li class={i === 0 ? 'font-extrabold text-pink-600' : ''}>
+						{entry.name} – {entry.score} click
+					</li>
+				{/each}
+			</ol>
+		</div>
+	{/if}
 </div>
 
-<div class="fixed bottom-0 flex w-full items-center p-8">
-	<div class="flex flex-1 items-center justify-center gap-6">
+<!-- BARRA INFERIORE FISSA -->
+<div class="fixed bottom-0 left-0 w-full border-t border-gray-200 bg-white p-6">
+	<div class="flex items-center justify-center gap-6">
 		<div class="timer">{formatTime(timeLeft)}</div>
 
-		<button
-			on:click={(e) => {
-				e.preventDefault();
-				increase();
-			}}
-			class="btn-text"
-			aria-label="Aumenta"
-			disabled={gameOver}
-		>
+		<button on:click={increase} class="btn-text" aria-label="Aumenta" disabled={gameOver}>
 			Di più
 		</button>
 
 		<div class="counter">{count}</div>
-	</div>
 
-	<button on:click={reset} class="btn-restart" aria-label="Restart">Restart</button>
+		{#if gameOver && nameSubmitted}
+			<button on:click={reset} class="btn-restart" aria-label="Restart">Restart</button>
+		{/if}
+	</div>
 </div>
 
 <style>
@@ -85,25 +118,22 @@
 		color: white;
 		font-family: Helvetica, sans-serif;
 		font-weight: bold;
-		font-size: 24px;
+		font-size: 20px;
 		text-align: center;
 		background-color: #f472b6;
-		padding: 20px 40px;
+		padding: 16px 30px;
 		border-radius: 30px;
 		cursor: pointer;
 		text-shadow: 0px 1px 0px #000;
 		box-shadow:
 			inset 0 1px 0 #ffe5c4,
-			0 10px 0 #ba4c86;
-		transition:
-			top 0.1s ease,
-			background-color 0.1s ease,
-			box-shadow 0.1s ease;
+			0 6px 0 #ba4c86;
 		border: none;
+		transition: all 0.1s ease-in-out;
 	}
 
 	.btn-text:active {
-		top: 10px;
+		top: 6px;
 		background-color: #f472b6;
 		box-shadow:
 			inset 0 1px 0 #ffe5c4,
@@ -117,36 +147,42 @@
 	}
 
 	.btn-restart {
-		font-family: Helvetica, sans-serif;
-		font-weight: bold;
-		font-size: 16px;
-		padding: 8px 16px;
-		border-radius: 20px;
-		background-color: #4caf50;
+		padding: 10px 16px;
+		font-size: 14px;
+		background-color: #6366f1;
 		color: white;
 		border: none;
+		border-radius: 20px;
 		cursor: pointer;
-		user-select: none;
+		transition: transform 0.2s ease;
 	}
 
 	.btn-restart:hover {
-		background-color: #45a049;
+		transform: scale(1.05);
+		background-color: #4f46e5;
 	}
 
-	.counter {
-		font-size: 24px;
+	.btn-submit {
+		background-color: #10b981;
+		color: white;
+		padding: 10px 20px;
+		border-radius: 20px;
 		font-weight: bold;
-		color: #333;
-		min-width: 40px;
-		text-align: center;
-		user-select: none;
+		border: none;
+		cursor: pointer;
+		transition: background-color 0.2s;
 	}
 
+	.btn-submit:hover {
+		background-color: #059669;
+	}
+
+	.counter,
 	.timer {
 		font-size: 24px;
 		font-weight: bold;
 		color: #333;
-		min-width: 50px;
+		min-width: 40px;
 		text-align: center;
 		user-select: none;
 	}
