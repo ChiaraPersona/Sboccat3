@@ -15,24 +15,43 @@
 	let textEl: HTMLElement;
 	let underlineEl: HTMLElement;
 
-	// Reactive: aggiorna isActive quando cambia $page
 	$: isActive = $page.url.pathname === href;
 
 	function onMouseMove(event: MouseEvent) {
-		if (!underlineEl || !textEl || !linkEl) return;
+		if (!linkEl) return;
+
+		const rect = linkEl.getBoundingClientRect();
+		const x = event.clientX - rect.left - rect.width / 2;
+		const y = event.clientY - rect.top - rect.height / 2;
+
+		gsap.to(linkEl, {
+			duration: 0.4,
+			x: x * 0.2,
+			y: y * 0.3,
+			ease: 'power3.out'
+		});
+	}
+
+	function onMouseLeave() {
+		if (!linkEl) return;
+
+		gsap.to(linkEl, {
+			duration: 0.5,
+			x: 0,
+			y: 0,
+			ease: 'elastic.out(1, 0.5)'
+		});
+
+		if (!underlineEl || !textEl) return;
 
 		const textRect = textEl.getBoundingClientRect();
 		const linkRect = linkEl.getBoundingClientRect();
-
-		let x = event.clientX - textRect.left;
-
-		x = Math.max(0, Math.min(x, textRect.width));
-
 		const offsetX = textRect.left - linkRect.left;
 
 		gsap.to(underlineEl, {
 			duration: 0.3,
-			x: offsetX + x - underlineEl.offsetWidth / 2,
+			width: 0,
+			x: offsetX + textEl.offsetWidth / 2,
 			ease: 'power3.out'
 		});
 	}
@@ -51,21 +70,6 @@
 			ease: 'power3.out'
 		});
 	}
-
-	function onMouseLeave() {
-		if (!underlineEl || !textEl || !linkEl) return;
-
-		const textRect = textEl.getBoundingClientRect();
-		const linkRect = linkEl.getBoundingClientRect();
-		const offsetX = textRect.left - linkRect.left;
-
-		gsap.to(underlineEl, {
-			duration: 0.3,
-			width: 0,
-			x: offsetX + textEl.offsetWidth / 2,
-			ease: 'power3.out'
-		});
-	}
 </script>
 
 <a
@@ -73,7 +77,7 @@
 	{href}
 	class={[
 		'relative inline-block cursor-pointer px-2 py-1 select-none',
-		'transition-colors duration-300',
+		'transition-colors duration-300 will-change-transform',
 		isActive ? 'text-sb-rosa' : 'hover:text-sb-rosa text-black'
 	]}
 	on:mousemove={onMouseMove}
