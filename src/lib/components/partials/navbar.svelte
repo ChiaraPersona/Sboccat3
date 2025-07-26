@@ -2,6 +2,7 @@
 	import NavbarLink from './navbar-link.svelte';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
+	import { writable } from 'svelte/store';
 
 	const links = [
 		{ url: '/eventi', testo: 'Eventi' },
@@ -28,6 +29,7 @@
 	];
 
 	let containerEl: HTMLElement;
+	const menuOpen = writable(false);
 
 	onMount(() => {
 		gsap.fromTo(
@@ -42,33 +44,130 @@
 			}
 		);
 	});
+
+	function toggleMenu() {
+		menuOpen.update((v) => {
+			console.log('menuOpen before:', v);
+			return !v;
+		});
+	}
+
+	function closeMenu() {
+		menuOpen.set(false);
+	}
 </script>
 
-<nav class="z-50 flex items-center px-4 py-1" bind:this={containerEl}>
-	<!-- Home a sinistra -->
-	<div>
+<nav class="relative z-50 flex items-center px-4 py-1" bind:this={containerEl}>
+	<!-- Home sempre visibile a sinistra -->
+	<div class="flex-shrink-0">
 		<NavbarLink a={{ url: '/', testo: 'Home' }} />
 	</div>
 
-	<!-- Link centrati -->
-	<div class="flex flex-grow justify-center gap-4">
+	<!-- Hamburger menu su mobile -->
+	<button
+		aria-label="Toggle menu"
+		on:click={toggleMenu}
+		class="hover:text-sb-rosa ml-auto p-2 text-gray-500
+	       transition duration-300
+	       ease-in-out hover:scale-120 focus:outline-none
+	       md:hidden"
+	>
+		{#if $menuOpen}
+			<!-- Icona X -->
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			>
+				<path d="M18 6 L6 18" />
+				<path d="M6 6 L18 18" />
+			</svg>
+		{:else}
+			<!-- Icona hamburger -->
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			>
+				<path d="M4 12h16" />
+				<path d="M4 18h16" />
+				<path d="M4 6h16" />
+			</svg>
+		{/if}
+	</button>
+
+	<!-- Menu principale: desktop -->
+	<div class="hidden flex-grow justify-center gap-4 md:flex">
 		{#each links as link}
 			<NavbarLink a={link} />
 		{/each}
 	</div>
 
-	<!-- Social icons a destra -->
-	<div class="flex items-center gap-3">
+	<div class="hidden items-center gap-3 md:flex">
 		{#each socialLinks as social}
 			<a
 				href={social.url}
 				target="_blank"
 				rel="noopener noreferrer"
 				aria-label={social.name}
-				class="transition-opacity hover:opacity-80"
+				class="group transition-opacity hover:opacity-80"
 			>
-				{@html social.svg}
+				<span class="icon-wrapper">
+					{@html social.svg}
+				</span>
 			</a>
 		{/each}
 	</div>
+
+	<!-- Menu mobile: visibile solo se aperto -->
+	{#if $menuOpen}
+		<div
+			class="fixed inset-x-0 top-[70px] z-40 flex h-[calc(100%-70px)] flex-col items-center justify-start gap-6 bg-white p-6 shadow-md md:hidden"
+			on:click={closeMenu}
+		>
+			{#each links as link}
+				<NavbarLink a={link} />
+			{/each}
+
+			<div class="flex items-center gap-6">
+				{#each socialLinks as social}
+					<a
+						href={social.url}
+						target="_blank"
+						rel="noopener noreferrer"
+						aria-label={social.name}
+						class="group transition-opacity hover:opacity-80"
+					>
+						<span class="icon-wrapper">
+							{@html social.svg}
+						</span>
+					</a>
+				{/each}
+			</div>
+		</div>
+	{/if}
 </nav>
+
+<style>
+	.icon-wrapper {
+		display: inline-block;
+		transition: transform 0.3s ease;
+		transform-origin: center;
+	}
+
+	a.group:hover .icon-wrapper {
+		transform: scale(1.2);
+	}
+</style>
