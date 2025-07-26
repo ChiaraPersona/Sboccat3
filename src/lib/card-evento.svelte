@@ -1,13 +1,24 @@
 <script lang="ts">
+	import { assets } from '$app/paths';
+	export let immagine: string;
 	export let titolo: string;
 	export let sottotitolo: string;
 	export let data: string;
-	export let immagine: string;
 </script>
 
-<div class="rounded-lg bg-white p-4 text-center shadow-lg transition-transform hover:scale-105">
-	<img class="mx-auto h-32 w-32 rounded-full" src={`/images/evento/${immagine}`} alt={titolo} />
-	<h2 class="mt-2 text-xl font-bold">{titolo}</h2>
-	<p class="italic">“{sottotitolo}”</p>
-	<p class="mt-1 text-sm text-gray-500">{new Date(data).toLocaleDateString()}</p>
+<div
+	class={[
+		'text-sb-bianco shadow-lg',
+		'from-sb-rosa/50 to-sb-viola/80 bg-radial-[at_10%_10%]',
+		'flex flex-col items-center',
+		'gap-3 rounded-lg p-4 text-center',
+		'transition-all duration-200 hover:scale-103 hover:rotate-2'
+	]}
+>
+	<img class="size-40 rounded-full" src={`/images/evento/${immagine}`} alt={`Foto di ${titolo}`} />
+	<div>
+		<p class="text-xl font-bold">{titolo}</p>
+		<p class="italic">“{sottotitolo}“</p>
+	</div>
+	<p>{new Date(data).toLocaleDateString()}</p>
 </div>
