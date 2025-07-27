@@ -106,7 +106,9 @@
 		{#if !nameSubmitted}
 			<button class="btn-text" on:click={increase} disabled={gameOver}>Di più</button>
 		{:else}
-			<button class="btn-text" on:click={reset}>Restart</button>
+			<div class="restart-wrapper">
+				<button class="btn-text" on:click={reset}>Restart</button>
+			</div>
 		{/if}
 
 		<div class="counter">{count}</div>
@@ -165,8 +167,9 @@
 		align-items: center;
 		width: 100%;
 		padding: 0 1rem;
-		height: 320px; /* oppure usa max-height */
-		overflow-y: auto;
+		/* rimuovi o commenta altezza e overflow */
+		/* height: 320px; */
+		/* overflow-y: auto; */
 	}
 
 	.frase {
@@ -180,14 +183,22 @@
 	}
 
 	.bottom-controls {
-		margin-bottom: 4rem;
+		margin-bottom: 0; /* togli il margine sotto */
+		padding: 1rem 0; /* padding solo sopra e sotto, senza ai lati */
+		width: 100vw; /* tutta la larghezza della viewport */
+		max-width: 100vw; /* niente max-width */
+		background-color: #ffd400;
+		border-radius: 0; /* nessun raccordo */
+		box-shadow: none; /* togli l’ombra se vuoi */
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		gap: 1.5rem;
-		flex-wrap: nowrap; /* evita che gli elementi vadano a capo */
-		width: 100%;
-		max-width: 500px;
+		flex-wrap: nowrap;
+		position: fixed; /* fissalo in basso */
+		bottom: 0;
+		left: 0;
+		z-index: 100; /* sopra altri elementi */
 	}
 
 	.timer,
