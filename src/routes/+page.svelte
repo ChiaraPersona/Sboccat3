@@ -25,6 +25,14 @@
 	let currentIndexFalo = 0;
 	let hoveredOnceFalo = false;
 
+	// Touch tracking Hatha
+	let touchStartXHatha = 0;
+	let touchEndXHatha = 0;
+
+	// Touch tracking Falo
+	let touchStartXFalo = 0;
+	let touchEndXFalo = 0;
+
 	// Funzioni per Hatha Yoga
 	function prevImageHatha() {
 		if (currentIndexHatha > 0) currentIndexHatha--;
@@ -38,6 +46,28 @@
 		if (!hoveredOnceHatha) hoveredOnceHatha = true;
 	}
 
+	function handleTouchStartHatha(event) {
+		touchStartXHatha = event.touches[0].clientX;
+	}
+
+	function handleTouchEndHatha(event) {
+		touchEndXHatha = event.changedTouches[0].clientX;
+		handleSwipeHatha();
+	}
+
+	function handleSwipeHatha() {
+		const deltaX = touchEndXHatha - touchStartXHatha;
+		const threshold = 50; // px minimo per considerare swipe
+
+		if (Math.abs(deltaX) > threshold) {
+			if (deltaX > 0) {
+				prevImageHatha();
+			} else {
+				nextImageHatha();
+			}
+		}
+	}
+
 	// Funzioni per Il Falò delle Streghe
 	function prevImageFalo() {
 		if (currentIndexFalo > 0) currentIndexFalo--;
@@ -49,6 +79,28 @@
 
 	function handleHoverFalo() {
 		if (!hoveredOnceFalo) hoveredOnceFalo = true;
+	}
+
+	function handleTouchStartFalo(event) {
+		touchStartXFalo = event.touches[0].clientX;
+	}
+
+	function handleTouchEndFalo(event) {
+		touchEndXFalo = event.changedTouches[0].clientX;
+		handleSwipeFalo();
+	}
+
+	function handleSwipeFalo() {
+		const deltaX = touchEndXFalo - touchStartXFalo;
+		const threshold = 50; // px minimo per considerare swipe
+
+		if (Math.abs(deltaX) > threshold) {
+			if (deltaX > 0) {
+				prevImageFalo();
+			} else {
+				nextImageFalo();
+			}
+		}
 	}
 </script>
 
@@ -68,7 +120,12 @@
 <!-- CONTAINER GALLERIE AFFIANCATE -->
 <section class="galleries-container">
 	<!-- Galleria Hatha Yoga -->
-	<section class="gallery" on:mouseenter={handleHoverHatha}>
+	<section
+		class="gallery"
+		on:mouseenter={handleHoverHatha}
+		on:touchstart={handleTouchStartHatha}
+		on:touchend={handleTouchEndHatha}
+	>
 		<div class="moving-title {hoveredOnceHatha ? 'moved' : ''}">HATHA YOGA</div>
 
 		<div class="gallery-frame">
@@ -92,7 +149,12 @@
 	</section>
 
 	<!-- Galleria Il Falò delle Streghe -->
-	<section class="gallery" on:mouseenter={handleHoverFalo}>
+	<section
+		class="gallery"
+		on:mouseenter={handleHoverFalo}
+		on:touchstart={handleTouchStartFalo}
+		on:touchend={handleTouchEndFalo}
+	>
 		<div class="moving-title {hoveredOnceFalo ? 'moved' : ''}">IL FALÒ DELLE STREGHE</div>
 
 		<div class="gallery-frame">
