@@ -18,27 +18,8 @@
 
 	import { fade } from 'svelte/transition';
 	let isNewRecord = false;
-	let audio = null;
 
 	onMount(() => {
-		// Disabilita zoom su doppio tap
-		document.addEventListener(
-			'touchstart',
-			(e) => {
-				if (e.touches.length > 1) {
-					e.preventDefault();
-				}
-			},
-			{ passive: false }
-		);
-		document.addEventListener('dblclick', (e) => {
-			e.preventDefault();
-		});
-	});
-
-	onMount(() => {
-		audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.wav'); // suono tada
-
 		// Disabilita zoom su doppio tap
 		document.addEventListener(
 			'touchstart',
@@ -96,18 +77,7 @@
 		isNewRecord = count > currentHighScore;
 
 		if (isNewRecord) {
-			if (!audio) {
-				audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.wav');
-			}
-			audio.currentTime = 0;
-			audio
-				.play()
-				.then(() => {
-					console.log('Audio riprodotto con successo');
-				})
-				.catch((err) => {
-					console.warn('Errore nella riproduzione audio:', err);
-				});
+			// Nessun suono, solo messaggio visivo
 		}
 
 		leaderboard = [...leaderboard, { name: playerName.trim(), score: count }];
@@ -197,7 +167,6 @@
 					<button on:click={submitScore} disabled={!playerName.trim()}>Invia punteggio</button>
 				</div>
 			{:else}
-				<h3>Grazie {playerName}!</h3>
 				{#if isNewRecord}
 					<p class="new-record-message" transition:fade={{ duration: 500 }}>
 						🎉 Nuovo record! Complimenti!
@@ -208,7 +177,7 @@
 					Sei al {getPlayerPosition()}{getOrdinalSuffix(getPlayerPosition())} posto con {count} click.
 				</p>
 
-				<h2>Classifica</h2>
+				<h2>Classifica dei gay</h2>
 				<ul>
 					{#each leaderboard as entry, index}
 						<li>{index + 1}{getOrdinalSuffix(index + 1)} - {entry.name}: {entry.score}</li>
