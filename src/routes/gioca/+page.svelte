@@ -185,17 +185,19 @@
 		justify-content: center;
 		align-items: center;
 		gap: 1.5rem;
-		flex-wrap: nowrap;
+		flex-wrap: nowrap; /* evita che gli elementi vadano a capo */
 		width: 100%;
 		max-width: 500px;
 	}
 
+	.timer,
 	.counter {
 		font-size: 2rem;
 		font-weight: bold;
 		user-select: none;
-		min-width: 3ch; /* 👈 Previene lo spostamento quando i numeri crescono */
+		width: 60px;
 		text-align: center;
+		flex-shrink: 0;
 	}
 
 	.btn-text {
@@ -234,9 +236,9 @@
 		padding: 2rem;
 		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 		width: 90%;
-		max-width: 400px; /* 👈 Limita la larghezza su desktop */
-		max-height: 80vh; /* non supera mai l’80% dell’altezza schermo */
-		overflow-y: auto; /* scorre se serve */
+		max-width: 400px;
+		max-height: 80vh;
+		overflow-y: auto;
 		text-align: center;
 		z-index: 10;
 	}
@@ -244,10 +246,10 @@
 	.leaderboard-popup ul {
 		list-style: none;
 		padding: 0;
-		max-height: 150px; /* <--- meno spazio verticale */
+		max-height: 150px;
 		overflow-y: auto;
 		margin-bottom: 1rem;
-		border: 1px solid #eee; /* opzionale: separatore visivo */
+		border: 1px solid #eee;
 		border-radius: 6px;
 	}
 
@@ -282,7 +284,7 @@
 		cursor: not-allowed;
 	}
 
-	/* Su mobile: rendi il bottone un po' più piccolo */
+	/* Su mobile: rendi il bottone un po' più piccolo ma stabile */
 	@media (max-width: 600px) {
 		.leaderboard-popup {
 			max-width: 90%;
@@ -292,14 +294,20 @@
 		.leaderboard-popup ul {
 			max-height: 120px;
 		}
+
+		.btn-text {
+			font-size: 1.6rem;
+			padding: 0.8rem 1.5rem;
+			min-width: 120px;
+		}
+
+		.bottom-controls {
+			max-width: 100%;
+			gap: 1rem;
+		}
 	}
-	.timer,
-	.counter {
-		font-size: 2rem;
-		font-weight: bold;
-		user-select: none;
-		width: 60px;
-		text-align: center;
-		flex-shrink: 0;
+
+	:global(html) {
+		touch-action: manipulation;
 	}
 </style>
