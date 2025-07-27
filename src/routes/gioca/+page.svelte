@@ -157,16 +157,16 @@
 		align-items: center;
 		padding: 2rem;
 		position: relative;
-		overflow-x: hidden;
 	}
 
 	.frase-wrapper {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		flex: 1;
 		width: 100%;
 		padding: 0 1rem;
+		height: 320px; /* oppure usa max-height */
+		overflow-y: auto;
 	}
 
 	.frase {
@@ -180,12 +180,14 @@
 	}
 
 	.bottom-controls {
-		margin-bottom: 2rem;
+		margin-bottom: 4rem;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		gap: 2rem;
-		flex-wrap: wrap;
+		gap: 1.5rem;
+		flex-wrap: nowrap;
+		width: 100%;
+		max-width: 500px;
 	}
 
 	.counter {
@@ -200,8 +202,10 @@
 		background-color: #f472b6;
 		color: white;
 		font-weight: bold;
-		font-size: 2.5rem;
+		font-size: 2rem;
 		padding: 1rem 2rem;
+		min-width: 140px;
+		text-align: center;
 		border: none;
 		border-radius: 30px;
 		cursor: pointer;
@@ -210,6 +214,8 @@
 			0 10px 0 #ba4c86;
 		text-shadow: 0 1px 0 #000;
 		transition: background-color 0.2s ease;
+		white-space: nowrap;
+		flex-shrink: 0;
 	}
 
 	.btn-text:disabled {
@@ -229,8 +235,8 @@
 		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 		width: 90%;
 		max-width: 400px; /* 👈 Limita la larghezza su desktop */
-		max-height: 80vh;
-		overflow-y: auto;
+		max-height: 80vh; /* non supera mai l’80% dell’altezza schermo */
+		overflow-y: auto; /* scorre se serve */
 		text-align: center;
 		z-index: 10;
 	}
@@ -238,7 +244,11 @@
 	.leaderboard-popup ul {
 		list-style: none;
 		padding: 0;
-		margin: 1rem 0;
+		max-height: 150px; /* <--- meno spazio verticale */
+		overflow-y: auto;
+		margin-bottom: 1rem;
+		border: 1px solid #eee; /* opzionale: separatore visivo */
+		border-radius: 6px;
 	}
 
 	.submit-area {
@@ -270,5 +280,26 @@
 	.submit-area button:disabled {
 		background-color: #aaa;
 		cursor: not-allowed;
+	}
+
+	/* Su mobile: rendi il bottone un po' più piccolo */
+	@media (max-width: 600px) {
+		.leaderboard-popup {
+			max-width: 90%;
+			padding: 1.5rem;
+		}
+
+		.leaderboard-popup ul {
+			max-height: 120px;
+		}
+	}
+	.timer,
+	.counter {
+		font-size: 2rem;
+		font-weight: bold;
+		user-select: none;
+		width: 60px;
+		text-align: center;
+		flex-shrink: 0;
 	}
 </style>
