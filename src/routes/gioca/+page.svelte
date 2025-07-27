@@ -13,6 +13,9 @@
 	let nameSubmitted = false;
 	let leaderboard = [];
 
+	let pressed = false; // animazione bottone "Di più"
+	let pressedRestart = false; // animazione bottone "Restart"
+
 	onMount(() => {
 		// Disabilita zoom su doppio tap
 		document.addEventListener(
@@ -45,7 +48,6 @@
 
 	function increase() {
 		if (gameOver || nameSubmitted) return;
-
 		if (!timerStarted) startTimer();
 
 		frase += 'y';
@@ -83,6 +85,8 @@
 		playerName = '';
 		nameSubmitted = false;
 		clearInterval(timerInterval);
+
+		pressedRestart = false; // reset animazione bottone restart
 	}
 
 	function getPlayerPosition() {
@@ -104,10 +108,33 @@
 		<div class="timer">{formatTime(timeLeft)}</div>
 
 		{#if !nameSubmitted}
-			<button class="btn-text" on:click={increase} disabled={gameOver}>Di più</button>
+			<button
+				class="btn-text"
+				class:pressed
+				on:mousedown={() => (pressed = true)}
+				on:mouseup={() => (pressed = false)}
+				on:mouseleave={() => (pressed = false)}
+				on:touchstart={() => (pressed = true)}
+				on:touchend={() => (pressed = false)}
+				on:click={increase}
+				disabled={gameOver}
+			>
+				Di più
+			</button>
 		{:else}
 			<div class="restart-wrapper">
-				<button class="btn-text" on:click={reset}>Restart</button>
+				<button
+					class="btn-text"
+					class:pressed={pressedRestart}
+					on:mousedown={() => (pressedRestart = true)}
+					on:mouseup={() => (pressedRestart = false)}
+					on:mouseleave={() => (pressedRestart = false)}
+					on:touchstart={() => (pressedRestart = true)}
+					on:touchend={() => (pressedRestart = false)}
+					on:click={reset}
+				>
+					Restart
+				</button>
 			</div>
 		{/if}
 
@@ -167,9 +194,6 @@
 		align-items: center;
 		width: 100%;
 		padding: 0 1rem;
-		/* rimuovi o commenta altezza e overflow */
-		/* height: 320px; */
-		/* overflow-y: auto; */
 	}
 
 	.frase {
@@ -183,22 +207,22 @@
 	}
 
 	.bottom-controls {
-		margin-bottom: 0; /* togli il margine sotto */
-		padding: 1rem 0; /* padding solo sopra e sotto, senza ai lati */
-		width: 100vw; /* tutta la larghezza della viewport */
-		max-width: 100vw; /* niente max-width */
-		background-color: #ffd400;
-		border-radius: 0; /* nessun raccordo */
-		box-shadow: none; /* togli l’ombra se vuoi */
+		margin-bottom: 0;
+		padding: 1rem 0;
+		width: 100vw;
+		max-width: 100vw;
+		background-color: #f2ab27;
+		border-radius: 0;
+		box-shadow: none;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		gap: 1.5rem;
 		flex-wrap: nowrap;
-		position: fixed; /* fissalo in basso */
+		position: fixed;
 		bottom: 0;
 		left: 0;
-		z-index: 100; /* sopra altri elementi */
+		z-index: 100;
 	}
 
 	.timer,
@@ -212,7 +236,7 @@
 	}
 
 	.btn-text {
-		background-color: #f472b6;
+		background-color: #f277bb;
 		color: white;
 		font-weight: bold;
 		font-size: 2rem;
@@ -226,7 +250,9 @@
 			inset 0 1px 0 #ffe5c4,
 			0 10px 0 #ba4c86;
 		text-shadow: 0 1px 0 #000;
-		transition: background-color 0.2s ease;
+		transition:
+			transform 0.1s ease,
+			box-shadow 0.1s ease;
 		white-space: nowrap;
 		flex-shrink: 0;
 	}
@@ -235,6 +261,13 @@
 		background-color: #aaa;
 		cursor: not-allowed;
 		box-shadow: none;
+	}
+
+	.btn-text.pressed {
+		transform: translateY(4px);
+		box-shadow:
+			inset 0 1px 3px rgba(0, 0, 0, 0.3),
+			0 2px 0 #ba4c86;
 	}
 
 	.leaderboard-popup {
@@ -295,7 +328,6 @@
 		cursor: not-allowed;
 	}
 
-	/* Su mobile: rendi il bottone un po' più piccolo ma stabile */
 	@media (max-width: 600px) {
 		.leaderboard-popup {
 			max-width: 90%;
@@ -313,12 +345,8 @@
 		}
 
 		.bottom-controls {
-			max-width: 100%;
-			gap: 1rem;
+			justify-content: space-between;
+			padding: 1rem 2rem;
 		}
-	}
-
-	:global(html) {
-		touch-action: manipulation;
 	}
 </style>
