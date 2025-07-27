@@ -134,7 +134,7 @@
 	<!-- Menu mobile: visibile solo se aperto -->
 	{#if $menuOpen}
 		<div
-			class="fixed inset-x-0 top-[40px] z-40 flex h-[calc(100%-70px)] flex-col items-center justify-start gap-6 bg-white p-6 shadow-md md:hidden"
+			class="fixed inset-x-0 top-[70px] z-40 flex h-[calc(100%-70px)] flex-col items-center justify-start gap-6 bg-white p-6 shadow-md md:hidden"
 			on:click={closeMenu}
 		>
 			{#each links as link}
