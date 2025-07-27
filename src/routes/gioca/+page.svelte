@@ -1,5 +1,5 @@
 <script>
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	let frase = 'sono gay';
 	let count = 0;
@@ -12,6 +12,26 @@
 	let playerName = '';
 	let nameSubmitted = false;
 	let leaderboard = [];
+
+	onMount(() => {
+		// Disabilita zoom su doppio tap
+		document.addEventListener(
+			'touchstart',
+			(e) => {
+				if (e.touches.length > 1) {
+					e.preventDefault();
+				}
+			},
+			{ passive: false }
+		);
+		document.addEventListener('dblclick', (e) => {
+			e.preventDefault();
+		});
+	});
+
+	onDestroy(() => {
+		if (timerInterval) clearInterval(timerInterval);
+	});
 
 	function formatTime(seconds) {
 		const m = Math.floor(seconds / 60);
@@ -26,9 +46,7 @@
 	function increase() {
 		if (gameOver || nameSubmitted) return;
 
-		if (!timerStarted) {
-			startTimer();
-		}
+		if (!timerStarted) startTimer();
 
 		frase += 'y';
 		count++;
@@ -50,7 +68,7 @@
 	function submitScore() {
 		if (!playerName.trim()) return;
 
-		leaderboard.push({ name: playerName.trim(), score: count });
+		leaderboard = [...leaderboard, { name: playerName.trim(), score: count }];
 		leaderboard.sort((a, b) => b.score - a.score);
 		if (leaderboard.length > 10) leaderboard = leaderboard.slice(0, 10);
 		nameSubmitted = true;
@@ -69,18 +87,16 @@
 
 	function getPlayerPosition() {
 		if (!nameSubmitted) return null;
-		return leaderboard.findIndex((item) => item.name === playerName && item.score === count) + 1;
+		return leaderboard.findIndex((entry) => entry.name === playerName && entry.score === count) + 1;
 	}
-
-	onDestroy(() => {
-		if (timerInterval) clearInterval(timerInterval);
-	});
 </script>
 
 <div class="container">
 	<!-- Frase al centro -->
 	<div class="frase-wrapper">
-		<p class="frase">{frase}</p>
+		{#if !gameOver}
+			<p class="frase">{frase}</p>
+		{/if}
 	</div>
 
 	<!-- Controlli in basso -->
@@ -88,9 +104,7 @@
 		<div class="timer">{formatTime(timeLeft)}</div>
 
 		{#if !nameSubmitted}
-			<button class="btn-text" on:click={increase} disabled={gameOver} aria-label="Aumenta">
-				Di più
-			</button>
+			<button class="btn-text" on:click={increase} disabled={gameOver}>Di più</button>
 		{:else}
 			<button class="btn-text" on:click={reset}>Restart</button>
 		{/if}
@@ -111,7 +125,7 @@
 
 				<div class="submit-area">
 					<input type="text" placeholder="Inserisci il tuo nome" bind:value={playerName} />
-					<button on:click={submitScore} disabled={!playerName.trim()}> Invia punteggio </button>
+					<button on:click={submitScore} disabled={!playerName.trim()}>Invia punteggio</button>
 				</div>
 			{:else}
 				<h3>Grazie {playerName}!</h3>
@@ -131,6 +145,10 @@
 </div>
 
 <style>
+	:global(html) {
+		touch-action: manipulation;
+	}
+
 	.container {
 		min-height: 100vh;
 		display: flex;
@@ -139,9 +157,9 @@
 		align-items: center;
 		padding: 2rem;
 		position: relative;
+		overflow-x: hidden;
 	}
 
-	/* FRASI AL CENTRO CON WRAP */
 	.frase-wrapper {
 		display: flex;
 		justify-content: center;
@@ -162,11 +180,12 @@
 	}
 
 	.bottom-controls {
-		margin-bottom: 4rem;
+		margin-bottom: 2rem;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		gap: 2rem;
+		flex-wrap: wrap;
 	}
 
 	.timer,
@@ -181,7 +200,7 @@
 		color: white;
 		font-weight: bold;
 		font-size: 2.5rem;
-		padding: 1rem 3rem;
+		padding: 1rem 2rem;
 		border: none;
 		border-radius: 30px;
 		cursor: pointer;
@@ -205,10 +224,12 @@
 		transform: translate(-50%, -50%);
 		background: white;
 		border-radius: 15px;
-		padding: 2rem 3rem;
+		padding: 2rem;
 		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-		max-width: 400px;
-		width: 90%;
+		max-width: 90vw;
+		width: 100%;
+		max-height: 80vh;
+		overflow-y: auto;
 		text-align: center;
 		z-index: 10;
 	}
@@ -216,15 +237,14 @@
 	.leaderboard-popup ul {
 		list-style: none;
 		padding: 0;
-		max-height: 200px;
-		overflow-y: auto;
-		margin-bottom: 1rem;
+		margin: 1rem 0;
 	}
 
 	.submit-area {
 		display: flex;
 		justify-content: center;
 		gap: 0.5rem;
+		flex-wrap: wrap;
 	}
 
 	.submit-area input {
@@ -233,6 +253,7 @@
 		border-radius: 6px;
 		border: 1px solid #ccc;
 		flex-grow: 1;
+		min-width: 150px;
 	}
 
 	.submit-area button {
