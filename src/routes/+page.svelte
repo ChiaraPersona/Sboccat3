@@ -1,111 +1,182 @@
 <script>
-  import { tweened } from 'svelte/motion';
-  import { cubicOut } from 'svelte/easing';
+	import { assets } from '$app/paths';
 
-  const galleries = {
-    hatha: Array.from({ length: 7 }, (_, i) => /images/hatha/hatha${i + 1}.jpg),
-    falo: Array.from({ length: 20 }, (_, i) => /images/falo/falo${i + 1}.jpg)
-  };
+	// Immagini Hatha Yoga
+	let hathaYogaImages = [
+		`${assets}/images/hatha/hatha1.jpg`,
+		`${assets}/images/hatha/hatha2.jpg`,
+		`${assets}/images/hatha/hatha3.jpg`,
+		`${assets}/images/hatha/hatha4.jpg`,
+		`${assets}/images/hatha/hatha5.jpg`,
+		`${assets}/images/hatha/hatha6.jpg`,
+		`${assets}/images/hatha/hatha7.jpg`
+	];
 
-  let state = {
-    hatha: { currentIndex: 0 },
-    falo: { currentIndex: 0 }
-  };
+	// Immagini Il Falò delle Streghe
+	let faloImages = [];
+	for (let i = 1; i <= 20; i++) {
+		faloImages.push(`${assets}/images/falo/falo${i}.jpg`);
+	}
 
-  // Posizione X animata per lo slide
-  // useremo tweened per animare la posizione dell'immagine
-  const posX = {
-    hatha: tweened(0, { duration: 300, easing: cubicOut }),
-    falo: tweened(0, { duration: 300, easing: cubicOut }),
-  };
+	// Stati gallerie
+	let currentIndexHatha = 0;
+	let hoveredOnceHatha = false;
 
-  // Per tracciare il drag
-  let dragging = {
-    hatha: false,
-    falo: false
-  };
-  let startX = { hatha: 0, falo: 0 };
-  let currentX = { hatha: 0, falo: 0 };
+	let currentIndexFalo = 0;
+	let hoveredOnceFalo = false;
 
-  function pointerDown(galleryKey, event) {
-    dragging[galleryKey] = true;
-    startX[galleryKey] = event.clientX;
-  }
+	// Touch tracking Hatha
+	let touchStartXHatha = 0;
+	let touchEndXHatha = 0;
 
-  function pointerMove(galleryKey, event) {
-    if (!dragging[galleryKey]) return;
-    currentX[galleryKey] = event.clientX;
-    let delta = currentX[galleryKey] - startX[galleryKey];
-    posX[galleryKey].set(delta);
-  }
+	// Touch tracking Falo
+	let touchStartXFalo = 0;
+	let touchEndXFalo = 0;
 
-  function pointerUp(galleryKey) {
-    if (!dragging[galleryKey]) return;
-    dragging[galleryKey] = false;
-    let delta = currentX[galleryKey] - startX[galleryKey];
-    const threshold = 100; // soglia di slide per cambiare immagine
+	// Funzioni per Hatha Yoga
+	function prevImageHatha() {
+		if (currentIndexHatha > 0) currentIndexHatha--;
+	}
 
-    if (delta > threshold && state[galleryKey].currentIndex > 0) {
-      // slide verso destra, immagine precedente
-      state[galleryKey].currentIndex--;
-    } else if (delta < -threshold && state[galleryKey].currentIndex < galleries[galleryKey].length -1) {
-      // slide verso sinistra, immagine successiva
-      state[galleryKey].currentIndex++;
-    }
-    // Anima la posizione a zero (ritorno all'origine)
-    posX[galleryKey].set(0);
-  }
+	function nextImageHatha() {
+		if (currentIndexHatha < hathaYogaImages.length - 1) currentIndexHatha++;
+	}
+
+	function handleHoverHatha() {
+		if (!hoveredOnceHatha) hoveredOnceHatha = true;
+	}
+
+	function handleTouchStartHatha(event) {
+		touchStartXHatha = event.touches[0].clientX;
+	}
+
+	function handleTouchEndHatha(event) {
+		touchEndXHatha = event.changedTouches[0].clientX;
+		handleSwipeHatha();
+	}
+
+	function handleSwipeHatha() {
+		const deltaX = touchEndXHatha - touchStartXHatha;
+		const threshold = 50; // px minimo per considerare swipe
+
+		if (Math.abs(deltaX) > threshold) {
+			if (deltaX > 0) {
+				prevImageHatha();
+			} else {
+				nextImageHatha();
+			}
+		}
+	}
+
+	// Funzioni per Il Falò delle Streghe
+	function prevImageFalo() {
+		if (currentIndexFalo > 0) currentIndexFalo--;
+	}
+
+	function nextImageFalo() {
+		if (currentIndexFalo < faloImages.length - 1) currentIndexFalo++;
+	}
+
+	function handleHoverFalo() {
+		if (!hoveredOnceFalo) hoveredOnceFalo = true;
+	}
+
+	function handleTouchStartFalo(event) {
+		touchStartXFalo = event.touches[0].clientX;
+	}
+
+	function handleTouchEndFalo(event) {
+		touchEndXFalo = event.changedTouches[0].clientX;
+		handleSwipeFalo();
+	}
+
+	function handleSwipeFalo() {
+		const deltaX = touchEndXFalo - touchStartXFalo;
+		const threshold = 50; // px minimo per considerare swipe
+
+		if (Math.abs(deltaX) > threshold) {
+			if (deltaX > 0) {
+				prevImageFalo();
+			} else {
+				nextImageFalo();
+			}
+		}
+	}
 </script>
 
-{#each Object.entries(galleries) as [key, images]}
-  <section
-    class="gallery"
-    on:pointerdown={(e) => pointerDown(key, e)}
-    on:pointermove={(e) => pointerMove(key, e)}
-    on:pointerup={() => pointerUp(key)}
-    on:pointercancel={() => pointerUp(key)}
-    on:mouseleave={() => pointerUp(key)}
-  >
-    <div class="gallery-frame" style="overflow:hidden; position:relative;">
-      {#each images as img, i}
-        <img
-          src={img}
-          alt={Immagine ${key} ${i + 1}}
-          class="gallery-image"
-          style="
-            position: absolute;
-            top: 0;
-            left: {(i - state[key].currentIndex) * 100}%;
-            width: 100%;
-            height: 100%;
-            transform: translateX({$posX[key]}px);
-            transition: {dragging[key] ? 'none' : 'transform 0.3s ease'};
-            user-select: none;
-            pointer-events: none;
-          "
-        />
-      {/each}
-    </div>
-  </section>
-{/each}
+<!-- HEADER -->
+<div class="header-container">
+	<h1>
+		Conversazioni <br />
+		Scomode!
+	</h1>
+	<img
+		class="logo"
+		src="{assets}/images/logo-sbloccate-sfondo-rosa.png"
+		alt="logo sboccate sfondo rosa"
+	/>
+</div>
 
-<style>
-  .gallery {
-    width: 360px;
-    height: 450px;
-    margin: 1rem;
-    touch-action: pan-y;
-  }
-  .gallery-frame {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-  }
-  .gallery-image {
-    object-fit: cover;
-  }
-</style>
+<!-- CONTAINER GALLERIE AFFIANCATE -->
+<section class="galleries-container">
+	<!-- Galleria Hatha Yoga -->
+	<section
+		class="gallery"
+		on:mouseenter={handleHoverHatha}
+		on:touchstart={handleTouchStartHatha}
+		on:touchend={handleTouchEndHatha}
+	>
+		<div class="moving-title {hoveredOnceHatha ? 'moved' : ''}">HATHA YOGA</div>
+
+		<div class="gallery-frame">
+			<img
+				src={hathaYogaImages[currentIndexHatha]}
+				alt="Immagine Hatha Yoga"
+				class="gallery-image transition-image"
+			/>
+
+			<div class="counter">
+				{currentIndexHatha + 1} / {hathaYogaImages.length}
+			</div>
+
+			{#if currentIndexHatha > 0}
+				<button on:click={prevImageHatha} class="arrow left" aria-label="Precedente">❮</button>
+			{/if}
+			{#if currentIndexHatha < hathaYogaImages.length - 1}
+				<button on:click={nextImageHatha} class="arrow right" aria-label="Successiva">❯</button>
+			{/if}
+		</div>
+	</section>
+
+	<!-- Galleria Il Falò delle Streghe -->
+	<section
+		class="gallery"
+		on:mouseenter={handleHoverFalo}
+		on:touchstart={handleTouchStartFalo}
+		on:touchend={handleTouchEndFalo}
+	>
+		<div class="moving-title {hoveredOnceFalo ? 'moved' : ''}">IL FALÒ DELLE STREGHE</div>
+
+		<div class="gallery-frame">
+			<img
+				src={faloImages[currentIndexFalo]}
+				alt="Immagine Il Falò delle Streghe"
+				class="gallery-image transition-image"
+			/>
+
+			<div class="counter">
+				{currentIndexFalo + 1} / {faloImages.length}
+			</div>
+
+			{#if currentIndexFalo > 0}
+				<button on:click={prevImageFalo} class="arrow left" aria-label="Precedente">❮</button>
+			{/if}
+			{#if currentIndexFalo < faloImages.length - 1}
+				<button on:click={nextImageFalo} class="arrow right" aria-label="Successiva">❯</button>
+			{/if}
+		</div>
+	</section>
+</section>
 
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Sen:wght@700&display=swap');
@@ -178,18 +249,7 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		transition: opacity 0.3s ease-in-out;
-		opacity: 1;
-	}
-
-	.gallery-image.fade-in {
-		opacity: 1;
-		transition: opacity 0.3s ease-in;
-	}
-
-	.gallery-image.fade-out {
-		opacity: 0;
-		transition: opacity 0.3s ease-out;
+		transition: opacity 0.6s ease-in-out;
 	}
 
 	/* Titoli mobili */
@@ -211,7 +271,7 @@
 		user-select: none;
 		z-index: 10;
 		width: 100%;
-		text-align: center;
+		text-align: center; /* per allineare meglio il testo */
 	}
 
 	.moving-title.moved {
@@ -234,7 +294,6 @@
 		border-radius: 6px;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 		transition: background 0.3s ease;
-		z-index: 5;
 	}
 
 	.arrow:hover {
