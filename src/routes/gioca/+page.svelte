@@ -188,11 +188,12 @@
 		flex-wrap: wrap;
 	}
 
-	.timer,
 	.counter {
 		font-size: 2rem;
 		font-weight: bold;
 		user-select: none;
+		min-width: 3ch; /* 👈 Previene lo spostamento quando i numeri crescono */
+		text-align: center;
 	}
 
 	.btn-text {
@@ -226,8 +227,8 @@
 		border-radius: 15px;
 		padding: 2rem;
 		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-		max-width: 90vw;
-		width: 100%;
+		width: 90%;
+		max-width: 400px; /* 👈 Limita la larghezza su desktop */
 		max-height: 80vh;
 		overflow-y: auto;
 		text-align: center;
