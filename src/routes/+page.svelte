@@ -46,10 +46,12 @@
 		if (!hoveredOnceHatha) hoveredOnceHatha = true;
 	}
 
+	/** @param {TouchEvent} event */
 	function handleTouchStartHatha(event) {
 		touchStartXHatha = event.touches[0].clientX;
 	}
 
+	/** @param {TouchEvent} event */
 	function handleTouchEndHatha(event) {
 		touchEndXHatha = event.changedTouches[0].clientX;
 		handleSwipeHatha();
@@ -81,10 +83,12 @@
 		if (!hoveredOnceFalo) hoveredOnceFalo = true;
 	}
 
+	/** @param {TouchEvent} event */
 	function handleTouchStartFalo(event) {
 		touchStartXFalo = event.touches[0].clientX;
 	}
 
+	/** @param {TouchEvent} event */
 	function handleTouchEndFalo(event) {
 		touchEndXFalo = event.changedTouches[0].clientX;
 		handleSwipeFalo();
